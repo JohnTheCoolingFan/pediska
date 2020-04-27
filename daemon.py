@@ -15,8 +15,6 @@ class NewMessageServer(asyncio.Protocol):
         print('Received data: {}'.format(data.decode()))
         self.transport.write(data)
 
-        self.transport.close()
-
 loop = asyncio.get_event_loop()
 coro = loop.create_server(NewMessageServer, '127.0.0.1', 40404)
 server = loop.run_until_complete(coro)
@@ -32,6 +30,10 @@ else:
         tokenfile.write(token)
 
 client = pediscord.Client(loop=loop)
+
+@client.event
+async def on_message(message: pediscord.Message):
+    print(message.content)
 
 client.run(token, bot=False)
 
