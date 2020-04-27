@@ -1,6 +1,16 @@
 #! /usr/bin/python
-import sys
-#sys.path.insert(0,"/home/taruu/PycharmProjects/discord.py")
-import pediscord
-print('This is client')
-print("pediscord",pediscord.__version__)
+
+import curses
+
+def main(stdscr):
+    stdscr.clear()
+
+    # Code goes here
+    new_window = curses.newwin(10, 25, 7, 20)
+    new_window.addstr(1, 1, 'Hello, world')
+    stdscr.refresh()
+
+    stdscr.refresh()
+    stdscr.getkey()
+
+curses.wrapper(main)
