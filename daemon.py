@@ -4,6 +4,7 @@ import pediscord as discord
 import getpass
 import os
 import asyncio
+import time
 
 loop = asyncio.get_event_loop()
 
@@ -24,7 +25,6 @@ coro = loop.create_server(NewMessageServer, '127.0.0.1', 40404)
 server = loop.run_until_complete(coro)
 print('Started on {}'.format(server.sockets[0].getsockname()))
 
-
 # Retrieve token
 token = ''
 if os.path.exists('token.txt'):
@@ -34,5 +34,10 @@ else:
     token = getpass.getpass('Enter your token: ')
     with open('token.txt', 'w') as tokenfile:
         tokenfile.write(token)
+
+@client.event
+async def on_message(message: discord.Message):
+    print(server.sockets)
+    server.sockets[0].send(message.content.encode())
 
 client.run(token, bot=False)

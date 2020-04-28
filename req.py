@@ -17,7 +17,6 @@ for line in message:
     print('Client received:', repr(data))
 
 while True:
-    time.sleep(0.3)
     data = sock.recv(1024)
     print('Message:', repr(data))
 
