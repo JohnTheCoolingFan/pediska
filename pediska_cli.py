@@ -6,9 +6,10 @@ def main(stdscr):
     stdscr.clear()
 
     # Code goes here
-    new_window = curses.newwin(10, 25, 7, 20)
-    new_window.addstr(1, 1, 'Hello, world')
-    stdscr.refresh()
+    new_window = curses.newwin(10, 20, 7, 20)
+    new_window.addstr(5, 5, 'Hello, world')
+    new_window.refresh()
+    new_window.getkey()
 
     stdscr.refresh()
     stdscr.getkey()
