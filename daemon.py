@@ -51,6 +51,5 @@ async def on_ready():
 async def on_message(message: discord.Message):
     print(server.sockets)
     server.sockets[0].send(message.content.encode())
-    pass
 
 client.run(token, bot=False)
