@@ -5,6 +5,7 @@ import getpass
 import os
 import asyncio
 import time
+import json
 
 loop = asyncio.get_event_loop()
 
@@ -36,8 +37,20 @@ else:
         tokenfile.write(token)
 
 @client.event
+async def on_ready():
+    startup = ('Logged as ' + str(client.user.name) + '#' + str(client.user.discriminator) + '(' + str(client.user.id) + ')')
+    print("=" * len(startup))
+    print(startup)
+    print("=" * len(startup))
+    guilds_json = []
+    for guild in client.guilds:
+        guild_list.append({"name":guild.name, "id":guild.id, "icon":guild.icon, "description":guild.description})
+    guilds_json = json.dumps(guilds_json)
+
+@client.event
 async def on_message(message: discord.Message):
     print(server.sockets)
     server.sockets[0].send(message.content.encode())
+    pass
 
 client.run(token, bot=False)
