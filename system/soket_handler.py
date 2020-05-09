@@ -3,23 +3,36 @@ import socket
 print(socket)
 class data_socket:
 
-    def __init__(self,port):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1)
+    def __init__(self,loop):
+        self.conn = None
+        self.loop = loop
+        self.last_msg = None
 
-        self.socket.bind(("localhost", port))
-        self.socket.listen(2)
+    async def handler(self):
+        while True:
+            msg = await self.loop.sock_recv(self.conn, 1024)
 
-        self.client,self.address = self.socket.accept()
-        #self.socket.setblocking(0)
-        self.client.send(bytes("Hey there!!!","utf-8"))
-        print("we get")
-        print("you sock")
+            if not msg:
+                break
+            else:
+                print("message in soket",msg)
+                #TODO Вот тут будет вызов оброботчика команд.... Да костыль но Работате же!!!!
+                pass
+        print("end conn")
+        self.conn.close()
+        self.conn = None
 
-    async def send(self, data):
-        print(data)
-        self.client.send(bytes(data+"\n","utf-8"))
-        return True
-    async def recv(self):
-        data = self.client.recv(4096)
-        return
+    async def sokct(self):
+        return self.conn
+
+    async def send(self,msg):
+        print(self.conn)
+        if self.conn:
+            await self.loop.sock_sendall(self.conn, bytes(msg,'utf-8'))
+        else:
+            return False
+    async def server(self,s):
+        print("startup")
+        while True:
+            self.conn, addr = await self.loop.sock_accept(s)
+            print(self.loop.create_task(self.handler()))
