@@ -38,27 +38,6 @@ else:
     with open('token.txt', 'w') as tokenfile:
         tokenfile.write(token)
 
-
-
-#async def test_read():
-
-    # while True:
-    #     conn = await scdt.sokct()
-    #     while conn:
-    #         msg = await loop.sock_recv(conn, 1024)
-    #         print("msg", msg)
-
-
-
-
-
-#
-@client.event
-async def on_message(message: discord.Message):
-    print(message.content)
-    await scdt.send(message.content + "\n")
-    #print(loop.get_task_factory())
-
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
