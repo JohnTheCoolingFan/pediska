@@ -1,29 +1,41 @@
-# Taken from the docs...
-
 import asyncio
+import socket
 
-class EchoServer(asyncio.Protocol):
-    def connection_made(self, transport):
-        peername = transport.get_extra_info('peername')
-        print('connection from {}'.format(peername))
-        self.transport = transport
-
-    def data_received(self, data):
-        print('data received: {}'.format(data.decode()))
-        self.transport.write(data)
-
-        # close the socket
-        self.transport.close()
-
+host = 'localhost'
+port = 9527
 loop = asyncio.get_event_loop()
-coro = loop.create_server(EchoServer, '127.0.0.1', 40404)
-server = loop.run_until_complete(coro)
-print('serving on {}'.format(server.sockets[0].getsockname()))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.setblocking(False)
+s.bind((host, port))
+s.listen(10)
 
-try:
-    loop.run_forever()
-except KeyboardInterrupt:
-    print("exit")
-finally:
-    server.close()
-    loop.close()
+
+
+def add(one, two):
+    return str(int(one) + int(two))
+
+
+
+async def handler(conn):
+    while True:
+        msg = await loop.sock_recv(conn, 1024)
+        print(msg)
+        print()
+        if b"+" in msg:
+            msg = bytes("result " + add(*msg.decode().split("+")), 'utf-8')
+            print(msg)
+
+        if not msg:
+            break
+        await loop.sock_sendall(conn, msg)
+    conn.close()
+
+async def server():
+    while True:
+        conn, addr = await loop.sock_accept(s)
+        loop.create_task(handler(conn))
+
+loop.create_task(server())
+loop.run_forever()
+loop.close()

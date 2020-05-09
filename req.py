@@ -8,6 +8,7 @@ SERVER_PORT = 40404
 message = [b'first message', b'second message']
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 sock.connect((SERVER_HOST, SERVER_PORT))
 
 for line in message:
