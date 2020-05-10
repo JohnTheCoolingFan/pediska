@@ -17,7 +17,6 @@ class data_socket:
             else:
                 print("message in soket",msg)
                 #TODO Вот тут будет вызов оброботчика команд.... Да костыль но Работате же!!!!
-                pass
         print("end conn")
         self.conn.close()
         self.conn = None
@@ -28,7 +27,7 @@ class data_socket:
     async def send(self,msg):
         print(self.conn)
         if self.conn:
-            await self.loop.sock_sendall(self.conn, bytes(msg,'utf-8'))
+            await self.loop.sock_sendall(self.conn, bytes(msg if msg[-1] == '\n' else msg+'\n','utf-8'))
         else:
             return False
     async def server(self,s):

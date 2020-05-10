@@ -46,6 +46,11 @@ async def on_ready():
 async def on_error(err):
     print(err)
 
+@client.event
+async def on_message(message):
+    print("discord mes", message.content)
+    await scdt.send(message.content)
+
 print(client.is_ready())
 loop.create_task(scdt.server(s))
 #loop.create_task(test_read())
