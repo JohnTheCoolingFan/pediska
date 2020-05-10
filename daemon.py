@@ -1,34 +1,23 @@
 #! /usr/bin/python
-
+import asyncio
 import pediscord as discord
 import getpass
 import os
-import asyncio
-import time
-import json
-import socket
 from  system.soket_handler import data_socket
-
-host = 'localhost'
-port = 9527
-loop = asyncio.get_event_loop()
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.setblocking(False)
-s.bind((host, port))
-s.listen(10)
-
 
 
 # pediscord client initialization
+
+
+loop = asyncio.get_event_loop()
 client = discord.Client(loop=loop)
-
-
 scdt = data_socket(loop)
+
 
 # pediscord client initialization
 
 # Retrieve token
+#TODO в другое место может это переложить?
 token = ''
 if os.path.exists('token.txt'):
     with open('token.txt', 'r') as token_file:
@@ -37,6 +26,9 @@ else:
     token = getpass.getpass('Enter your token: ')
     with open('token.txt', 'w') as tokenfile:
         tokenfile.write(token)
+
+
+
 
 @client.event
 async def on_ready():
@@ -51,10 +43,10 @@ async def on_message(message):
     print("discord mes", message.content)
     await scdt.send(message.content)
 
-print(client.is_ready())
-loop.create_task(scdt.server(s))
-#loop.create_task(test_read())
-client.run(token, bot=False)
+if __name__ == "__main__":
+    scdt.set_socket("localhost", 8888)
+    loop.create_task(scdt.start_socket_handler())
+    client.run(token, bot=False)
 
 
 
