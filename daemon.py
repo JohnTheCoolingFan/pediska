@@ -17,7 +17,8 @@ scdt = data_socket(loop)
 # pediscord client initialization
 
 # Retrieve token
-#TODO в другое место может это переложить?
+# TODO в другое место может это переложить?
+# Это будет потом в другом месте и вообще по-другому работать. Временное решение.
 token = ''
 if os.path.exists('token.txt'):
     with open('token.txt', 'r') as token_file:
