@@ -1,6 +1,5 @@
 import socket
 #TODO https://ru.stackoverflow.com/questions/684398/Прием-сообщений-в-socket-python
-print(socket)
 class data_socket:
 
     def __init__(self,loop):
@@ -18,23 +17,22 @@ class data_socket:
         self.socket.listen(10)
         return True
 
-
+    #оброботчик сокета
     async def socket_handler(self):
         while True:
             msg = await self.loop.sock_recv(self.conn, 1024)
-
             if not msg:
                 break
             else:
                 print("message in soket",msg)
-                #TODO Вот тут будет вызов оброботчика команд.... Да костыль но Работате же!!!!
-        print("end conn")
+                #TODO Вот тут будет вызов оброботчика команд
+                #TODO реализация через task!
         self.conn.close()
         self.conn = None
 
     #получить текущее подключение
     #Возращает none если ничего нет
-    async def sokct(self):
+    async def get_current_soket(self): #для реализации костылей
         return self.conn
 
     #Отправляет сообщение на сокет в случае успеха вернет True иначе False
@@ -51,7 +49,6 @@ class data_socket:
 
     #запуск обработчика сокета
     async def start_socket_handler(self):
-
         while True:
             self.conn, addr = await self.loop.sock_accept(self.socket)
             self.loop.create_task(self.socket_handler())
